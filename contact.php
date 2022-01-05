@@ -6,48 +6,50 @@ $prenom = $_POST["prenom"];
 $email = $_POST["email"];
 $telephone = $_POST["telephone"];
 $adresse = $_POST["adresse"];
-
 // j'affiche les valeurs sous forme de tableau
-
 $table = [$nom, $prenom, $email, $telephone, $adresse];
+print_r($table);
 
 
-if (empty($nom) + empty($prenom) + empty($email) + empty($telephone) + empty($adresse)) {
-    print_r('champs manquants');
-} else {
-    print_r($table);
+$Err = "";
+
+// boucle du tableau des inputs
+for ($i = 0; $i <= 4; $i++) {
+    if (!($table[$i])) {
+        $Err = "Champs manquants";
+        echo 'div class="alert"' . $Err . '</div>';
+        break;
+    }
+}
+
+function validatePhoneNumber($string)
+{  //création fonction pour valider le tél
+    $phoneNumberArr = str_split($string); //création tableau avec str pour séparer les chiffres
+    if ($phoneNumberArr[0] != 0) {   //si le premier chiffre != 0 alors...
+        return false;
+    }
+    foreach ($phoneNumberArr as $value) { //la foreach !! trop puissante mdr
+        if (!is_numeric($value)) { // vérif que chaque caractère = numérique
+            return false;
+        }
+    }
+    if (strlen($string) != 10) { //vérif taille du numéro
+        return false;
+    }
+    return true;
 }
 
 
-// si j'enlève l'attribut name de l'input name celui ci ne s'affiche plus
-
-//J'ajouter la condition suivante : S’il existe au moins un champ non rempli dans le formulaire, le tableau ne sera pas affiché et le message « Champs manquants » est affiché.
-
-?>
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>formulaire en PhP</title>
-</head>
-
-<body>
-    <h1>Formulaire de contact</h1>
-
-    <form action="http://localhost:3000/contact.php" method="POST">
-        <input type="text" name="nom" placeholder="Entrer votre nom" minlength="3">
-        <input type="text" name="prenom" placeholder="Entrer votre prenom" minlength="3">
-        <input type="email" name="email" placeholder="Entrer votre email">
-        <input type="tel" name="telephone" placeholder="Entrer votre numéro de téléphone" maxlength="10" minlength="10">
-        <input type="text" name="adresse" placeholder="Entrer votre adresse">
-
-        <input class="btn-validate" type="submit" value="Envoyer">
-        <input class="btn-reset" type="reset" value="Annuler">
-    </form>
-</body>
-
-</html>
+if (strlen($nom) < 3) {
+    $Err = "Le prénom doit comporter 3 lettres au moins.";
+    echo '<div class="alert">' . $Err . '</div>';
+} elseif (!ctype_alpha($prenom)) {
+    $Err = "Le prénom contient des caracteres non autorises";
+    echo '<div class="alert">' . $Err . '</div>';
+} elseif (!ctype_alpha($nom)) {
+    $Err = "Le nom contient des caracteres non autorises";
+    echo '<div class="alert">' . $Err . '</div>';
+} elseif (validatePhoneNumber($telephone) === false) {
+    $Err = "Le numero de telephone ne doit contenir que des chiffres";
+    echo '<div class="alert">' . $Err . '</div>';
+}
