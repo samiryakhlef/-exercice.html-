@@ -14,6 +14,7 @@ print_r($table);
 $Err = "";
 
 // boucle du tableau des inputs
+
 for ($i = 0; $i <= 4; $i++) {
     if (!($table[$i])) {
         $Err = "Champs manquants";
@@ -39,6 +40,7 @@ function validatePhoneNumber($string)
     return true;
 }
 
+// condition des données des inputs
 
 if (strlen($nom) < 3) {
     $Err = "Le prénom doit comporter 3 lettres au moins.";
